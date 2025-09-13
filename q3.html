@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Super Styled Pyodide Calculator</title>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .calculator {
+            background: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .calculator h1 {
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: #333;
+        }
+
+        input {
+            padding: 12px;
+            margin: 10px;
+            width: 80%;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #74ebd5;
+            outline: none;
+            box-shadow: 0 0 8px rgba(116, 235, 213, 0.5);
+        }
+
+        button {
+            padding: 12px 25px;
+            margin-top: 15px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            margin-top: 20px;
+            color: #444;
+        }
+
+        #result {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+            margin-top: 10px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="calculator">
+        <h1>✨ Super Styled Calculator 🧮</h1>
+        <input type="number" id="num1" placeholder="Enter first number">
+        <input type="number" id="num2" placeholder="Enter second number">
+        <br>
+        <button onclick="addNumbers()">➕ Add Numbers</button>
+        <h2>Result: <span id="result">–</span></h2>
+    </div>
+
+    <script>
+        let pyodideReady = loadPyodide();
+
+        async function addNumbers() {
+            let pyodide = await pyodideReady;
+            let num1 = document.getElementById("num1").value || "0";
+            let num2 = document.getElementById("num2").value || "0";
+
+            let code = `
+def add(a, b):
+    return a + b
+
+add(float(${num1}), float(${num2}))
+      `;
+            let result = await pyodide.runPythonAsync(code);
+            document.getElementById("result").textContent = result;
+        }
+    </script>
+</body>
+
+</html>
